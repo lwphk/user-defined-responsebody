@@ -8,7 +8,11 @@ import com.lwp.entity.User;
 
 @RestController
 public class TestController {
-
+	
+	/**
+	 * 过滤User id属性 和 UserInfo对象的number属性
+	 * @return
+	 */
 	@ResponseBodyJson(type=User.class,excludes= {"id","userInfo.number"})
 	@RequestMapping("/filter")
 	public User filter() {
