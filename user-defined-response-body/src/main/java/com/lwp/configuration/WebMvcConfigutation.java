@@ -18,11 +18,9 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @EnableWebMvc
 public class WebMvcConfigutation extends WebMvcConfigurerAdapter {
 
-
-
 	@Autowired
 	private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
-	
+
 	@Autowired
 	ResponseBodyJsonHandler responseBodyJsonHandler;
 
@@ -33,7 +31,7 @@ public class WebMvcConfigutation extends WebMvcConfigurerAdapter {
 		final int deferredPos = obtainValueHandlerPosition(originalHandlers,
 				DeferredResultMethodReturnValueHandler.class);
 		originalHandlers.add(deferredPos + 1, responseBodyJsonHandler);
-		//添加自己的ReturnValueHandler
+		// 添加自己的ReturnValueHandler
 		requestMappingHandlerAdapter.setReturnValueHandlers(originalHandlers);
 	}
 
@@ -48,5 +46,4 @@ public class WebMvcConfigutation extends WebMvcConfigurerAdapter {
 		return -1;
 	}
 
-	
 }

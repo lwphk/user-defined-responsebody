@@ -32,10 +32,12 @@ import com.lwp.annotation.ResponseBodyJson;
 public class ResponseBodyJsonHandler implements HandlerMethodReturnValueHandler ,InitializingBean{
 	
 	/**
+	 * 
 	 * 实体类泛型字段真实类的参数下标
 	 * Map<C1,C2> map;   
 	 * real C1 ==> genericityRealClassIndex.put(Map.class.getName(), 0);  
 	 * real C2 ==> genericityRealClassIndex.put(Map.class.getName(), 1);
+	 * 
 	 */
 	private Map<String, Integer> genericityRealClassIndex;   
 	
@@ -69,13 +71,12 @@ public class ResponseBodyJsonHandler implements HandlerMethodReturnValueHandler 
 		ResponseBodyJson annotation = returnType.getMethodAnnotation(ResponseBodyJson.class);
 		String[] excludes = annotation.excludes();
 		String[] includes = annotation.includes();
+		//clzzMap   key:类全名  value:具体类的Class对象
 		Map<String, Class<?>> clzzMap = new HashMap<>();
 		SimplePropertyPreFilter[] propertyFilterArr = null;
 		clzzMap.put(annotation.type().getName(), annotation.type());
-		
 		if(excludes.length > 0) {
 			propertyFilterArr = getPropertyFilters(clzzMap, excludes, annotation.type(),true);
-			
 		}else {
 			propertyFilterArr = getPropertyFilters(clzzMap, includes, annotation.type(),false);
 		}
@@ -95,6 +96,7 @@ public class ResponseBodyJsonHandler implements HandlerMethodReturnValueHandler 
 	 * @throws SecurityException
 	 */
 	private SimplePropertyPreFilter[] getPropertyFilters(Map<String, Class<?>> clzzMap,String[] propertys,Class<?> annotationType,boolean isExclude) throws NoSuchFieldException, SecurityException {
+		//propertysMap  key:类名   value:类里面include或者exlude的集合字段
 		Map<String, Set<String>> propertysMap = new HashMap<>();
 		propertysMap.put(annotationType.getName(), new HashSet<>());
 		for (String property : propertys) {
@@ -102,7 +104,6 @@ public class ResponseBodyJsonHandler implements HandlerMethodReturnValueHandler 
 				int lastIndexOf = property.lastIndexOf(".");
 				String className = property.substring(0, lastIndexOf);
 				String attribute = property.substring(lastIndexOf+1,property.length());
-		
 				if(clzzMap.containsKey(className)) {
 					propertysMap.get(className).add(attribute);
 				}else {
@@ -157,7 +158,7 @@ public class ResponseBodyJsonHandler implements HandlerMethodReturnValueHandler 
 	public Class<?> getGenericityRealClass(Field field){
 		Type type = field.getGenericType();
 		ParameterizedType pt = null;
-		//如果是泛型参数
+		//如果是泛型参数,如private List<?> list; 获取 ? 真实类型 而不是List类型
 		while(type instanceof ParameterizedType) {
 			pt = (ParameterizedType) type;
 			int index = getTypeIndex(pt);
@@ -166,7 +167,7 @@ public class ResponseBodyJsonHandler implements HandlerMethodReturnValueHandler 
 		if(pt == null) {
 			return Empty.class;
 		}
-		return (Class<?>)pt.getActualTypeArguments()[getTypeIndex(pt)];
+		return (Class<?>) pt.getActualTypeArguments()[getTypeIndex(pt)];
 	}
 	 
 	public  int getTypeIndex(ParameterizedType pt) {

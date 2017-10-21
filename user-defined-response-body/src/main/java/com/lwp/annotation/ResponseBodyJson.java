@@ -10,7 +10,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ResponseBodyJson {
-
+	
+	/**
+	 * 过滤开始的根类型
+	 * @return
+	 */
 	Class<?> type();
 	
 	String[] includes() default {};
