@@ -2,7 +2,9 @@
 Spring boot/MVC Json返回参数过滤
 
 # 配置
+
 	---XML---
+	
 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
 		<property name="customReturnValueHandlers">
 			<list>
@@ -10,7 +12,9 @@ Spring boot/MVC Json返回参数过滤
 			</list>
 		</property>
 	</bean>
+	
 	---JavaConfig---
+	
 	@Autowired
 	private RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 	
@@ -42,12 +46,12 @@ Spring boot/MVC Json返回参数过滤
 	
 # 使用(支持点语法)
 
-@ResponseBodyJson(type=User.class,excludes= {"id","userInfo.number","cardList.cardNo"})
+	@ResponseBodyJson(type=User.class,excludes= {"id","userInfo.number","cardList.cardNo"})
 
-@RequestMapping("/filter")
+	@RequestMapping("/filter")
 
-public User filter() {
+	public User filter() {
 
-	return new User();
-  
-}
+		return new User();
+
+	}
